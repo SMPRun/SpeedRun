@@ -1,0 +1,4 @@
+name: Speedrun
+version: '1.0'
+main: net.smprun.speedrun.Speedrun
+api-version: '1.21'
