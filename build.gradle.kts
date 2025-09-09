@@ -15,15 +15,21 @@ repositories {
     maven("https://repo.tcoded.com/releases") {
         name = "tcoded-releases"
     }
+    maven("https://repo.aikar.co/content/groups/aikar/") {
+        name = "aikar"
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
     
     implementation("com.tcoded:FoliaLib:0.5.1")
+    
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
 tasks {
@@ -51,8 +57,4 @@ tasks.processResources {
     filesMatching("paper-plugin.yml") {
         expand(props)
     }
-}
-
-tasks.shadowJar {
-    relocate("com.tcoded.folialib", "net.smprun.speedrun.lib.folialib")
 }
