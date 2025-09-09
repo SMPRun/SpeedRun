@@ -4,7 +4,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
-group = "me.emmerich"
+group = "net.smprun"
 version = "1.0"
 
 repositories {
@@ -12,11 +12,18 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc-repo"
     }
+    maven("https://repo.tcoded.com/releases") {
+        name = "tcoded-releases"
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
+    
+    implementation("com.tcoded:FoliaLib:0.5.1")
 }
 
 tasks {
@@ -44,4 +51,8 @@ tasks.processResources {
     filesMatching("paper-plugin.yml") {
         expand(props)
     }
+}
+
+tasks.shadowJar {
+    relocate("com.tcoded.folialib", "net.smprun.speedrun.lib.folialib")
 }
