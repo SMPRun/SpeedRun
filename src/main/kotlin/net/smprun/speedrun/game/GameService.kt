@@ -1,0 +1,150 @@
+package net.smprun.speedrun.game
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.speedrun.Speedrun
+import net.smprun.speedrun.events.GameEndEvent
+import net.smprun.speedrun.events.GameStartEvent
+import net.smprun.speedrun.game.world.WorldResetService
+import net.smprun.speedrun.player.repository.PlayerRepository
+import net.smprun.speedrun.utils.TimeUtil
+import net.smprun.speedrun.winner.WinnerRecord
+import net.smprun.speedrun.winner.repository.WinnerRepository
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+
+class GameService(private val plugin: Speedrun) {
+    
+    private val winnerRepository by lazy { WinnerRepository(plugin) }
+    private val playerRepository by lazy { PlayerRepository(plugin) }
+    private val resetService by lazy { WorldResetService(plugin) }
+    private val ioScope = CoroutineScope(Dispatchers.IO)
+    
+    @Volatile
+    private var gameStartTime: Long? = null
+    
+    @Volatile 
+    var isGameActive: Boolean = false
+        private set
+    
+    @Volatile 
+    private var resetScheduled: Boolean = false
+    
+    fun startGame() {
+        if (isGameActive) {
+            return
+        }
+        
+        gameStartTime = System.currentTimeMillis()
+        isGameActive = true
+        resetScheduled = false
+        
+        plugin.logger.info("Speedrun game started at $gameStartTime")
+        
+        // Fire game start event
+        val event = GameStartEvent(gameStartTime!!)
+        Bukkit.getPluginManager().callEvent(event)
+        
+        // Broadcast start message
+        Bukkit.getServer().broadcast(Component.text("Speedrun started! Race to defeat the Ender Dragon!", NamedTextColor.GREEN))
+    }
+    
+    fun endGame(winner: Player?) {
+        if (!isGameActive) {
+            plugin.logger.info("Game end called but no game is active")
+            return
+        }
+        
+        plugin.logger.info("Ending game with winner: ${winner?.name ?: "none"}")
+        
+        val gameDuration = getGameDuration()
+        if (gameDuration == null) {
+            plugin.logger.warning("Cannot end game - no start time recorded")
+            return
+        }
+        
+        var winnerRecord: WinnerRecord? = null
+        
+        // Record winner if present
+        if (winner != null) {
+            winnerRecord = WinnerRecord(
+                uuid = winner.uniqueId,
+                username = winner.name,
+                winTime = gameDuration
+            )
+            
+            ioScope.launch {
+                try {
+                    // Save winner record
+                    winnerRepository.insert(winnerRecord)
+                    
+                    // Update player stats
+                    val player = playerRepository.findByUuid(winner.uniqueId)
+                    if (player != null) {
+                        playerRepository.upsert(player.addWin(gameDuration))
+                    }
+                } catch (e: Exception) {
+                    plugin.logger.severe("Failed to record winner: ${e.message}")
+                }
+            }
+            
+            // Broadcast completion message
+            val formattedTime = TimeUtil.formatTime(gameDuration)
+            Bukkit.getServer().broadcast(Component.text("${winner.name} has defeated the Ender Dragon in $formattedTime!", NamedTextColor.GOLD))
+        }
+        
+        // Stop the game
+        isGameActive = false
+        plugin.logger.info("Speedrun game ended")
+        
+        // Fire game end event
+        val event = GameEndEvent(winner, winnerRecord, gameDuration)
+        Bukkit.getPluginManager().callEvent(event)
+        
+        // Schedule world reset
+        scheduleWorldReset(winner, gameDuration)
+    }
+    
+    fun forceStopGame() {
+        if (!isGameActive) {
+            return
+        }
+        
+        isGameActive = false
+        plugin.logger.info("Speedrun game force stopped")
+        
+        // Broadcast force stop message
+        Bukkit.getServer().broadcast(Component.text("Speedrun has been force stopped by admin! Server will reset in 10 seconds...", NamedTextColor.RED))
+        
+        // Schedule immediate world reset
+        plugin.foliaLib.scheduler.runLater(Runnable {
+            resetService.resetAllWorlds(
+                kickReason = Component.text("Speedrun force stopped by admin. Restarting with new world...")
+            )
+        }, 20L * 10) // 10 seconds
+    }
+    
+    fun getGameDuration(): Long? {
+        return gameStartTime?.let { System.currentTimeMillis() - it }
+    }
+    
+    private fun scheduleWorldReset(winner: Player?, gameDuration: Long) {
+        if (resetScheduled) {
+            return
+        }
+        
+        resetScheduled = true
+        Bukkit.getServer().broadcast(Component.text("Server will reset in 60 seconds...", NamedTextColor.YELLOW))
+        
+        plugin.foliaLib.scheduler.runLater(Runnable {
+            val winnerText = winner?.name ?: "Unknown Winner"
+            val timeText = " in ${TimeUtil.formatTime(gameDuration)}"
+            resetService.resetAllWorlds(
+                kickReason = Component.text("Speedrun complete! Winner: $winnerText$timeText. Restarting for a new run...")
+            )
+        }, 20L * 60) // 60 seconds
+    }
+}

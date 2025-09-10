@@ -1,4 +1,4 @@
-package net.smprun.speedrun.game
+package net.smprun.speedrun.game.world
 
 import net.kyori.adventure.text.Component
 import net.smprun.speedrun.Speedrun
@@ -60,7 +60,7 @@ class WorldResetService(private val plugin: Speedrun) {
             // Delete all world folders except the current one
             val worldFolders = serverDir.listFiles { file ->
                 file.isDirectory && (
-                    file.name.startsWith("world_") || 
+                    file.name.startsWith("world_") ||
                     file.name == "world" ||
                     file.name == "world_nether" ||
                     file.name == "world_the_end"

@@ -2,6 +2,7 @@ package net.smprun.speedrun
 
 import co.aikar.commands.PaperCommandManager
 import com.tcoded.folialib.FoliaLib
+import net.smprun.speedrun.game.GameService
 import net.smprun.speedrun.utils.MongoService
 import net.smprun.speedrun.utils.RegistrationManager
 import org.bukkit.plugin.java.JavaPlugin
@@ -12,6 +13,7 @@ class Speedrun : JavaPlugin() {
     lateinit var commandManager: PaperCommandManager
     private lateinit var registrationManager: RegistrationManager
     lateinit var mongoService: MongoService
+    lateinit var gameService: GameService
 
     override fun onEnable() {
         foliaLib = FoliaLib(this)
@@ -29,6 +31,7 @@ class Speedrun : JavaPlugin() {
             return
         }
         
+        gameService = GameService(this)
         registrationManager.registerAll()
         
         logger.info("Speedrun plugin enabled!")
