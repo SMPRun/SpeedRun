@@ -1,7 +1,6 @@
 package net.smprun.speedrun.game
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -10,7 +9,7 @@ import kotlin.random.Random
 
 class WorldResetService(private val plugin: Speedrun) {
 
-    fun resetAllWorlds(kickReason: Component = Component.text("Worlds are regenerating, please rejoin in a moment.", NamedTextColor.RED)) {
+    fun resetAllWorlds(kickReason: Component) {
         // Generate new random seed for the overworld
         val newSeed = Random.nextLong()
 
