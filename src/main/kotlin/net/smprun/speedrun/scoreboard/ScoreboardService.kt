@@ -48,10 +48,11 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
 
         // Initialize lines
         sidebar.line(0, Component.text("Best Time: N/A", NamedTextColor.WHITE))
-        sidebar.line(1, Component.text("Wins: N/A", NamedTextColor.WHITE))
-        sidebar.line(2, Component.text("Current Run: N/A", NamedTextColor.WHITE))
-        sidebar.line(3, Component.text("", NamedTextColor.DARK_GRAY))
-        sidebar.line(4, Component.text("smprun.net", NamedTextColor.GRAY))
+        sidebar.line(1, Component.text("Recent Time: N/A", NamedTextColor.WHITE))
+        sidebar.line(2, Component.text("Wins: N/A", NamedTextColor.WHITE))
+        sidebar.line(3, Component.text("Current Run: N/A", NamedTextColor.WHITE))
+        sidebar.line(4, Component.text("", NamedTextColor.DARK_GRAY))
+        sidebar.line(5, Component.text("smprun.net", NamedTextColor.GRAY))
 
         sidebar.addPlayer(player)
         sidebarsByPlayer[player.uniqueId] = sidebar
@@ -84,6 +85,7 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
                 val player = runBlocking { playerRepository.findByUuid(playerId) }
 
                 val bestTimeText = player?.bestTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
+                val recentTimeText = player?.recentTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
                 val winsText = player?.wins?.toString() ?: "N/A"
 
                 val currentRunText = if (plugin.gameService.isGameActive) {
@@ -98,10 +100,11 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
                     val sb = sidebarsByPlayer[playerId] ?: return@Runnable
                     sb.title(Component.text("SMPRun Network", NamedTextColor.GOLD))
                     sb.line(0, Component.text("Best Time: $bestTimeText", NamedTextColor.WHITE))
-                    sb.line(1, Component.text("Wins: $winsText", NamedTextColor.WHITE))
-                    sb.line(2, Component.text("Current Run: $currentRunText", NamedTextColor.WHITE))
-                    sb.line(3, Component.text("", NamedTextColor.DARK_GRAY))
-                    sb.line(4, Component.text("smprun.net", NamedTextColor.GRAY))
+                    sb.line(1, Component.text("Recent Time: $recentTimeText", NamedTextColor.WHITE))
+                    sb.line(2, Component.text("Wins: $winsText", NamedTextColor.WHITE))
+                    sb.line(3, Component.text("Current Run: $currentRunText", NamedTextColor.WHITE))
+                    sb.line(4, Component.text("", NamedTextColor.DARK_GRAY))
+                    sb.line(5, Component.text("smprun.net", NamedTextColor.GRAY))
                 }, 0L)
             } catch (e: Exception) {
                 plugin.logger.warning("Failed updating scoreboard for ${bukkitPlayer.name}: ${e.message}")
