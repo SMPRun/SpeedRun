@@ -5,3 +5,8 @@ api-version: '1.21'
 description: A speedrun plugin
 website: https://emmerichbrowne.com
 folia: true
+
+permissions:
+  speedrun.freeze.bypass:
+    description: Bypass pre and post game freeze and allow movement before game and after starts
+    default: op
