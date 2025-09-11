@@ -8,7 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
 import net.smprun.speedrun.events.GameEndEvent
 import net.smprun.speedrun.events.GameStartEvent
-import net.smprun.speedrun.game.world.WorldResetService
+import net.smprun.speedrun.game.world.WorldService
 import net.smprun.speedrun.player.repository.PlayerRepository
 import net.smprun.speedrun.utils.TimeUtil
 import net.smprun.speedrun.winner.WinnerRecord
@@ -20,7 +20,7 @@ class GameService(private val plugin: Speedrun) {
     
     private val winnerRepository by lazy { WinnerRepository(plugin) }
     private val playerRepository by lazy { PlayerRepository(plugin) }
-    private val resetService by lazy { WorldResetService(plugin) }
+    private val resetService by lazy { WorldService(plugin) }
     private val ioScope = CoroutineScope(Dispatchers.IO)
     
     @Volatile

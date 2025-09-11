@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import java.io.File
 import kotlin.random.Random
 
-class WorldResetService(private val plugin: Speedrun) {
+class WorldService(private val plugin: Speedrun) {
 
     fun resetAllWorlds(kickReason: Component) {
         // Generate new random seed for the overworld
