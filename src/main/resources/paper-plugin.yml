@@ -8,5 +8,8 @@ folia: true
 
 permissions:
   speedrun.freeze.bypass:
-    description: Bypass pre and post game freeze and allow movement before game and after starts
+    description: Bypass pre-game freeze and allow movement before game starts
+    default: op
+  speedrun.chat.bypass:
+    description: Bypass global chat mute enforced by the Speedrun plugin
     default: op
