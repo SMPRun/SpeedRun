@@ -1,13 +1,13 @@
-package net.smprun.speedrun.utils
+package net.smprun.speedrun.database
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import kotlinx.coroutines.runBlocking
+import net.smprun.speedrun.Speedrun
 import org.bson.Document
 import org.bson.UuidRepresentation
-import net.smprun.speedrun.Speedrun
 
 class MongoService(private val plugin: Speedrun) {
 
@@ -53,5 +53,3 @@ class MongoService(private val plugin: Speedrun) {
         }
     }
 }
-
-

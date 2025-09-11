@@ -17,4 +17,18 @@ object TimeUtil {
             else -> String.format("%ds %dms", seconds, millis)
         }
     }
+
+    fun formatTimeShort(milliseconds: Long): String {
+        val totalSeconds = milliseconds / 1000
+        val days = totalSeconds / 86400
+        val hours = (totalSeconds % 86400) / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+
+        return when {
+            days > 0 -> String.format("%dd %02d:%02d:%02d", days, hours, minutes, seconds)
+            hours > 0 -> String.format("%d:%02d:%02d", hours, minutes, seconds)
+            else -> String.format("%d:%02d", minutes, seconds)
+        }
+    }
 }

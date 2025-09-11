@@ -10,12 +10,14 @@ import net.smprun.speedrun.player.repository.PlayerRepository
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 @AutoRegister
 class PlayerListener(private val plugin: Speedrun) : Listener {
 
     private val repository by lazy { PlayerRepository(plugin) }
     private val ioScope = CoroutineScope(Dispatchers.IO)
+    private val scoreboard by lazy { plugin.scoreboardService }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -38,5 +40,17 @@ class PlayerListener(private val plugin: Speedrun) : Listener {
                 plugin.logger.severe("Failed to ensure PlayerInfo for ${name}: ${e.message}")
             }
         }
+
+        // Show scoreboard after join
+        plugin.foliaLib.scheduler.runLater(Runnable {
+            if (bukkitPlayer.isOnline) {
+                scoreboard.showFor(bukkitPlayer)
+            }
+        }, 20L)
+    }
+
+    @EventHandler
+    fun onQuit(event: PlayerQuitEvent) {
+        scoreboard.hideFor(event.player)
     }
 }

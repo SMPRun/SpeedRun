@@ -32,6 +32,13 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     
     implementation("org.reflections:reflections:0.10.2")
+
+    // Scoreboard library (api on compile, impl/adapters at runtime)
+    implementation("net.megavex:scoreboard-library-api:2.4.1")
+    runtimeOnly("net.megavex:scoreboard-library-implementation:2.4.1")
+    implementation("net.megavex:scoreboard-library-extra-kotlin:2.4.1")
+    // Use Mojang-mapped adapter for modern Paper (1.17+) servers
+    runtimeOnly("net.megavex:scoreboard-library-modern:2.4.1:mojmap")
 }
 
 tasks {
@@ -50,6 +57,13 @@ kotlin {
 
 tasks.build {
     dependsOn("shadowJar")
+}
+
+// Shade and relocate FoliaLib to avoid conflicts with other plugins
+tasks.shadowJar {
+    mergeServiceFiles()
+    relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
+    archiveClassifier.set("all")
 }
 
 tasks.processResources {
