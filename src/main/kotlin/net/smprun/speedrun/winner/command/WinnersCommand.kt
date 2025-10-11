@@ -8,8 +8,8 @@ import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
-import net.smprun.speedrun.annotations.AutoRegister
-import net.smprun.speedrun.utils.TimeUtil
+import net.smprun.common.annotations.AutoRegister
+import net.smprun.common.utils.TimeUtil
 import net.smprun.speedrun.winner.repository.WinnerRepository
 import org.bukkit.command.CommandSender
 

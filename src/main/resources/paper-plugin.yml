@@ -6,6 +6,9 @@ description: A speedrun plugin
 website: https://emmerichbrowne.com
 folia: true
 
+depend:
+  - Common
+
 permissions:
   speedrun.freeze.bypass:
     description: Bypass pre-game freeze and allow movement before game starts

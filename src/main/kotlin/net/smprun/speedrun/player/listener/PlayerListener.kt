@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
-import net.smprun.speedrun.annotations.AutoRegister
+import net.smprun.common.annotations.AutoRegister
 import net.smprun.speedrun.player.Player
 import net.smprun.speedrun.player.repository.PlayerRepository
 import org.bukkit.event.EventHandler

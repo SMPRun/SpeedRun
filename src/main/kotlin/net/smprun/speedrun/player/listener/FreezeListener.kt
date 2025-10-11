@@ -3,7 +3,7 @@ package net.smprun.speedrun.player.listener
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
-import net.smprun.speedrun.annotations.AutoRegister
+import net.smprun.common.annotations.AutoRegister
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

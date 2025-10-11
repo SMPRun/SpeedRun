@@ -10,7 +10,7 @@ import net.smprun.speedrun.events.GameEndEvent
 import net.smprun.speedrun.events.GameStartEvent
 import net.smprun.speedrun.game.world.WorldService
 import net.smprun.speedrun.player.repository.PlayerRepository
-import net.smprun.speedrun.utils.TimeUtil
+import net.smprun.common.utils.TimeUtil
 import net.smprun.speedrun.winner.WinnerRecord
 import net.smprun.speedrun.winner.repository.WinnerRepository
 import org.bukkit.Bukkit

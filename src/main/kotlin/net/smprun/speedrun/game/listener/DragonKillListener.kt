@@ -1,7 +1,7 @@
 package net.smprun.speedrun.game.listener
 
 import net.smprun.speedrun.Speedrun
-import net.smprun.speedrun.annotations.AutoRegister
+import net.smprun.common.annotations.AutoRegister
 import org.bukkit.entity.EnderDragon
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

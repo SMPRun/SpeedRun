@@ -1,6 +1,6 @@
 package net.smprun.speedrun.player.listener
 
-import net.smprun.speedrun.annotations.AutoRegister
+import net.smprun.common.annotations.AutoRegister
 import io.papermc.paper.event.player.AsyncChatEvent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
