@@ -26,12 +26,15 @@ class GameService(private val plugin: Speedrun) {
     @Volatile
     private var gameStartTime: Long? = null
     
-    @Volatile 
+    @Volatile
     var isGameActive: Boolean = false
         private set
-    
-    @Volatile 
+
+    @Volatile
     private var resetScheduled: Boolean = false
+
+    val isResetScheduled: Boolean
+        get() = resetScheduled
     
     fun startGame() {
         if (isGameActive) {

@@ -10,6 +10,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
 import net.smprun.speedrun.events.DragonKillEvent
+import net.smprun.speedrun.game.world.WorldService
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -59,5 +60,26 @@ class SpeedrunCommand(private val plugin: Speedrun) : BaseCommand() {
         Bukkit.getPluginManager().callEvent(event)
 
         sender.sendMessage(Component.text("Dragon kill event fired! Real speedrun completion logic will handle the rest.", NamedTextColor.GREEN))
+    }
+
+    @Subcommand("reset")
+    @Description("Reset the world with a new random seed (only when no game is active)")
+    fun onReset(sender: CommandSender) {
+        if (plugin.gameService.isGameActive) {
+            sender.sendMessage(Component.text("Cannot reset world while a speedrun is active!", NamedTextColor.RED))
+            return
+        }
+
+        if (plugin.gameService.isResetScheduled) {
+            sender.sendMessage(Component.text("World reset is already scheduled! Please wait for it to complete.", NamedTextColor.RED))
+            return
+        }
+
+        sender.sendMessage(Component.text("Resetting world with new random seed...", NamedTextColor.YELLOW))
+
+        val resetService = WorldService(plugin)
+        resetService.resetAllWorlds(
+            kickReason = Component.text("World is being reset with a new random seed. Reconnecting...")
+        )
     }
 }
