@@ -23,22 +23,19 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("net.smprun:common:1.0")
     
-    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compileOnly("org.jetbrains.kotlin:kotlin-reflect")
+
+    compileOnly("net.smprun:common:1.0")
+    
+    compileOnly("net.megavex:scoreboard-library-api:2.4.1")
+    
+    compileOnly("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
+    
+    compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     
     implementation("com.tcoded:FoliaLib:0.5.1")
-    
-    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
-
-    // Scoreboard library (api on compile, impl/adapters at runtime)
-    implementation("net.megavex:scoreboard-library-api:2.4.1")
-    runtimeOnly("net.megavex:scoreboard-library-implementation:2.4.1")
-    implementation("net.megavex:scoreboard-library-extra-kotlin:2.4.1")
-    // Use Mojang-mapped adapter for modern Paper (1.17+) servers
-    runtimeOnly("net.megavex:scoreboard-library-modern:2.4.1:mojmap")
 }
 
 tasks {
@@ -59,11 +56,20 @@ tasks.build {
     dependsOn("shadowJar")
 }
 
-// Shade and relocate FoliaLib to avoid conflicts with other plugins
 tasks.shadowJar {
     mergeServiceFiles()
     relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
     archiveClassifier.set("all")
+    
+    // Exclude dependencies provided by Common via join-classpath to prevent classloader conflicts
+    dependencies {
+        exclude(dependency("org.jetbrains.kotlin:.*"))
+        exclude(dependency("org.jetbrains.kotlinx:.*"))
+        exclude(dependency("org.mongodb:.*"))
+        exclude(dependency("com.mongodb:.*"))
+        exclude(dependency("org.bson:.*"))
+        exclude(dependency("co.aikar:.*"))
+    }
 }
 
 tasks.processResources {

@@ -4,10 +4,14 @@ main: net.smprun.speedrun.Speedrun
 api-version: '1.21'
 description: A speedrun plugin
 website: https://emmerichbrowne.com
-folia: true
+folia-supported: true
 
-depend:
-  - Common
+dependencies:
+  server:
+    Common:
+      load: BEFORE
+      required: true
+      join-classpath: true
 
 permissions:
   speedrun.freeze.bypass:

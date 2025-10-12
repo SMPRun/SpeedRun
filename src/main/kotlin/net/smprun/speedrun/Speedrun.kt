@@ -19,7 +19,7 @@ class Speedrun : JavaPlugin() {
     lateinit var scoreboardService: ScoreboardService
 
     override fun onEnable() {
-        foliaLib = CommonServices.foliaLib
+        foliaLib = FoliaLib(this)
         commandManager = PaperCommandManager(this)
         registrationManager = RegistrationManager(this, commandManager, basePackage = "net.smprun.speedrun")
         saveDefaultConfig()
