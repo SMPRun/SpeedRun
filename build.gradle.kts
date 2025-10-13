@@ -31,7 +31,7 @@ dependencies {
     
     compileOnly("net.megavex:scoreboard-library-api:2.4.1")
     
-    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
+    compileOnly("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
     
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     
