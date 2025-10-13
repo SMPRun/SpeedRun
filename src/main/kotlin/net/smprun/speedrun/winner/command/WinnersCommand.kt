@@ -5,8 +5,9 @@ import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Description
 import co.aikar.commands.annotation.Subcommand
 import kotlinx.coroutines.runBlocking
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.common.utils.Colors
+import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
 import net.smprun.common.utils.TimeUtil
@@ -24,23 +25,24 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
     @Description("List all winners")
     fun onList(sender: CommandSender) {
         if (gameService.isGameActive) {
-            sender.sendMessage(Component.text("Cannot view winners while a game is active!", NamedTextColor.RED))
+            Text.error(sender, "Cannot view winners while a game is active!")
             return
         }
         plugin.foliaLib.scheduler.runAsync { _ ->
             try {
                 val list = runBlocking { repo.listAll() }
                 if (list.winners.isEmpty()) {
-                    sender.sendMessage(Component.text("No winners recorded yet.", NamedTextColor.GRAY))
+                    Text.info(sender, "No winners recorded yet.")
                     return@runAsync
                 }
-                sender.sendMessage(Component.text("Winners:", NamedTextColor.GOLD))
+                Text.component(sender, Text.header("Winners"))
                 list.winners.forEachIndexed { index, w ->
                     val formattedTime = TimeUtil.formatTime(w.winTime)
-                    sender.sendMessage(Component.text("${index + 1}. ${w.username} - $formattedTime", NamedTextColor.WHITE))
+                    Text.raw(sender, "${index + 1}. ${w.username} - $formattedTime", NamedTextColor.WHITE)
                 }
+                Text.component(sender, Text.footer())
             } catch (e: Exception) {
-                sender.sendMessage(Component.text("Failed to fetch winners: ${e.message}", NamedTextColor.RED))
+                Text.error(sender, "Failed to fetch winners: ${e.message}")
             }
         }
     }
@@ -49,7 +51,7 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
     @Description("Show the best time winner")
     fun onBest(sender: CommandSender) {
         if (gameService.isGameActive) {
-            sender.sendMessage(Component.text("Cannot view best time while a game is active!", NamedTextColor.RED))
+            Text.error(sender, "Cannot view best time while a game is active!")
             return
         }
         plugin.foliaLib.scheduler.runAsync { _ ->
@@ -57,13 +59,13 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
                 val list = runBlocking { repo.listAll() }
                 val best = list.getBestTimeWinner()
                 if (best == null) {
-                    sender.sendMessage(Component.text("No winners recorded yet.", NamedTextColor.GRAY))
+                    Text.info(sender, "No winners recorded yet.")
                 } else {
                     val formattedTime = TimeUtil.formatTime(best.winTime)
-                    sender.sendMessage(Component.text("Best time: ${best.username} - $formattedTime", NamedTextColor.GOLD))
+                    Text.colored(sender, "Best time: ${best.username} - $formattedTime", Colors.BRAND_PRIMARY)
                 }
             } catch (e: Exception) {
-                sender.sendMessage(Component.text("Failed to fetch best winner: ${e.message}", NamedTextColor.RED))
+                Text.error(sender, "Failed to fetch best winner: ${e.message}")
             }
         }
     }

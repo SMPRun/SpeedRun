@@ -1,7 +1,6 @@
 package net.smprun.speedrun.player.listener
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
 import org.bukkit.entity.Player
@@ -32,9 +31,7 @@ class FreezeListener(private val plugin: Speedrun) : Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
         if (!plugin.gameService.isGameActive && !player.hasPermission(bypassPermission)) {
-            player.sendMessage(
-                Component.text("The speedrun hasn't started yet. You are frozen until it starts.", NamedTextColor.YELLOW)
-            )
+            Text.warning(player, "The speedrun hasn't started yet. You are frozen until it starts.")
         }
     }
 

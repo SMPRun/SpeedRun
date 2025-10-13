@@ -6,9 +6,9 @@ import co.aikar.commands.annotation.CommandPermission
 import co.aikar.commands.annotation.Description
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
+import net.smprun.common.utils.Text
 import net.smprun.speedrun.events.DragonKillEvent
 import net.smprun.speedrun.game.world.WorldService
 import org.bukkit.Bukkit
@@ -24,31 +24,31 @@ class SpeedrunCommand(private val plugin: Speedrun) : BaseCommand() {
     @Description("Start the speedrun timer")
     fun onStart(sender: CommandSender) {
         if (plugin.gameService.isGameActive) {
-            sender.sendMessage(Component.text("A speedrun is already in progress!", NamedTextColor.RED))
+            Text.error(sender, "A speedrun is already in progress!")
             return
         }
 
         plugin.gameService.startGame()
-        sender.sendMessage(Component.text("Speedrun timer started!", NamedTextColor.GOLD))
+        Text.success(sender, "Speedrun timer started!")
     }
 
     @Subcommand("forcestop")
     @Description("Force stop the speedrun without recording winner and reset worlds")
     fun onForceStop(sender: CommandSender) {
         if (!plugin.gameService.isGameActive) {
-            sender.sendMessage(Component.text("No speedrun is currently active!", NamedTextColor.RED))
+            Text.error(sender, "No speedrun is currently active!")
             return
         }
 
         plugin.gameService.forceStopGame()
-        sender.sendMessage(Component.text("Speedrun force stopped! Resetting worlds...", NamedTextColor.YELLOW))
+        Text.warning(sender, "Speedrun force stopped! Resetting worlds...")
     }
 
     @Subcommand("complete")
     @Description("Complete the speedrun by simulating an Ender Dragon kill")
     fun onComplete(sender: CommandSender) {
         if (!plugin.gameService.isGameActive) {
-            sender.sendMessage(Component.text("No speedrun is currently active! Start one first with /speedrun start", NamedTextColor.RED))
+            Text.error(sender, "No speedrun is currently active! Start one first with /speedrun start")
             return
         }
 
@@ -59,23 +59,23 @@ class SpeedrunCommand(private val plugin: Speedrun) : BaseCommand() {
         val event = DragonKillEvent(killer)
         Bukkit.getPluginManager().callEvent(event)
 
-        sender.sendMessage(Component.text("Dragon kill event fired! Real speedrun completion logic will handle the rest.", NamedTextColor.GREEN))
+        Text.success(sender, "Dragon kill event fired! Real speedrun completion logic will handle the rest.")
     }
 
     @Subcommand("reset")
     @Description("Reset the world with a new random seed (only when no game is active)")
     fun onReset(sender: CommandSender) {
         if (plugin.gameService.isGameActive) {
-            sender.sendMessage(Component.text("Cannot reset world while a speedrun is active!", NamedTextColor.RED))
+            Text.error(sender, "Cannot reset world while a speedrun is active!")
             return
         }
 
         if (plugin.gameService.isResetScheduled) {
-            sender.sendMessage(Component.text("World reset is already scheduled! Please wait for it to complete.", NamedTextColor.RED))
+            Text.error(sender, "World reset is already scheduled! Please wait for it to complete.")
             return
         }
 
-        sender.sendMessage(Component.text("Resetting world with new random seed...", NamedTextColor.YELLOW))
+        Text.warning(sender, "Resetting world with new random seed...")
 
         val resetService = WorldService(plugin)
         resetService.resetAllWorlds(

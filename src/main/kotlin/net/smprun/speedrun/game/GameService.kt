@@ -4,7 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.common.utils.Colors
+import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
 import net.smprun.speedrun.events.GameEndEvent
 import net.smprun.speedrun.events.GameStartEvent
@@ -52,7 +53,7 @@ class GameService(private val plugin: Speedrun) {
         Bukkit.getPluginManager().callEvent(event)
         
         // Broadcast start message
-        Bukkit.getServer().broadcast(Component.text("Speedrun started! Race to defeat the Ender Dragon!", NamedTextColor.GREEN))
+        Text.broadcast("Speedrun started! Race to defeat the Ender Dragon!", Colors.SUCCESS)
     }
     
     fun endGame(winner: Player?) {
@@ -96,7 +97,7 @@ class GameService(private val plugin: Speedrun) {
             
             // Broadcast completion message
             val formattedTime = TimeUtil.formatTime(gameDuration)
-            Bukkit.getServer().broadcast(Component.text("${winner.name} has defeated the Ender Dragon in $formattedTime!", NamedTextColor.GOLD))
+            Text.broadcast("${winner.name} has defeated the Ender Dragon in $formattedTime!", Colors.BRAND_PRIMARY)
         }
         
         // Stop the game
@@ -120,7 +121,7 @@ class GameService(private val plugin: Speedrun) {
         plugin.logger.info("Speedrun game force stopped")
         
         // Broadcast force stop message
-        Bukkit.getServer().broadcast(Component.text("Speedrun has been force stopped by admin! Server will reset in 10 seconds...", NamedTextColor.RED))
+        Text.broadcast("Speedrun has been force stopped by admin! Server will reset in 10 seconds...", Colors.ERROR)
         
         // Schedule immediate world reset
         plugin.foliaLib.scheduler.runLater(Runnable {
@@ -140,7 +141,7 @@ class GameService(private val plugin: Speedrun) {
         }
         
         resetScheduled = true
-        Bukkit.getServer().broadcast(Component.text("Server will reset in 60 seconds...", NamedTextColor.YELLOW))
+        Text.broadcast("Server will reset in 60 seconds...", Colors.WARNING)
         
         plugin.foliaLib.scheduler.runLater(Runnable {
             val winnerText = winner?.name ?: "Unknown Winner"

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.smprun.common.CommonServices
 import net.smprun.common.scoreboard.SidebarManager
+import net.smprun.common.utils.Colors
 import net.smprun.speedrun.Speedrun
 import net.smprun.speedrun.player.repository.PlayerRepository
 import net.smprun.common.utils.TimeUtil
@@ -30,12 +31,12 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
     }
 
     fun showFor(player: Player) {
-        sidebarManager.show(player, Component.text("SMPRun Network", NamedTextColor.GOLD))?.let { sb ->
-            sb.line(0, Component.text("Best Time: N/A", NamedTextColor.WHITE))
-            sb.line(1, Component.text("Recent Time: N/A", NamedTextColor.WHITE))
-            sb.line(2, Component.text("Wins: N/A", NamedTextColor.WHITE))
-            sb.line(3, Component.text("Current Run: N/A", NamedTextColor.WHITE))
-            sb.line(4, Component.text("", NamedTextColor.DARK_GRAY))
+        sidebarManager.show(player, Component.text("SMPRun Network", Colors.BRAND_PRIMARY))?.let { sb ->
+            sb.line(0, Component.text("Best Time: ", Colors.BRAND_SECONDARY).append(Component.text("N/A", NamedTextColor.WHITE)))
+            sb.line(1, Component.text("Recent Time: ", Colors.BRAND_SECONDARY).append(Component.text("N/A", NamedTextColor.WHITE)))
+            sb.line(2, Component.text("Wins: ", Colors.BRAND_SECONDARY).append(Component.text("N/A", NamedTextColor.WHITE)))
+            sb.line(3, Component.text("Current Run: ", Colors.BRAND_SECONDARY).append(Component.text("N/A", NamedTextColor.WHITE)))
+            sb.line(4, Component.text(""))
             sb.line(5, Component.text("smprun.net", NamedTextColor.GRAY))
             updatePlayer(player.uniqueId)
         }
@@ -78,12 +79,12 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
                 plugin.foliaLib.scheduler.runLater(Runnable {
                     if (!bukkitPlayer.isOnline) return@Runnable
                     sidebarManager.update(playerId) { sb ->
-                        sb.title(Component.text("SMPRun Network", NamedTextColor.GOLD))
-                        sb.line(0, Component.text("Best Time: $bestTimeText", NamedTextColor.WHITE))
-                        sb.line(1, Component.text("Recent Time: $recentTimeText", NamedTextColor.WHITE))
-                        sb.line(2, Component.text("Wins: $winsText", NamedTextColor.WHITE))
-                        sb.line(3, Component.text("Current Run: $currentRunText", NamedTextColor.WHITE))
-                        sb.line(4, Component.text("", NamedTextColor.DARK_GRAY))
+                        sb.title(Component.text("SMPRun Network", Colors.BRAND_PRIMARY))
+                        sb.line(0, Component.text("Best Time: ", Colors.BRAND_SECONDARY).append(Component.text(bestTimeText, NamedTextColor.WHITE)))
+                        sb.line(1, Component.text("Recent Time: ", Colors.BRAND_SECONDARY).append(Component.text(recentTimeText, NamedTextColor.WHITE)))
+                        sb.line(2, Component.text("Wins: ", Colors.BRAND_SECONDARY).append(Component.text(winsText, NamedTextColor.WHITE)))
+                        sb.line(3, Component.text("Current Run: ", Colors.BRAND_SECONDARY).append(Component.text(currentRunText, NamedTextColor.WHITE)))
+                        sb.line(4, Component.text(""))
                         sb.line(5, Component.text("smprun.net", NamedTextColor.GRAY))
                     }
                 }, 0L)

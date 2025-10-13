@@ -25,7 +25,7 @@ class Speedrun : JavaPlugin() {
         saveDefaultConfig()
 
         mongoService = CommonServices.mongo
-        
+
         gameService = GameService(this)
         registrationManager.registerAll()
 

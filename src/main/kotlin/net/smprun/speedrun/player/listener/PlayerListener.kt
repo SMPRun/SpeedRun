@@ -3,8 +3,7 @@ package net.smprun.speedrun.player.listener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
 import net.smprun.speedrun.player.Player
@@ -28,13 +27,9 @@ class PlayerListener(private val plugin: Speedrun) : Listener {
         val name = bukkitPlayer.name
 
         if (bukkitPlayer.hasPermission("speedrun.chat.bypass")) {
-            bukkitPlayer.sendMessage(
-                Component.text("Note: Global chat is muted on Speedrun servers. You have bypass.", NamedTextColor.GRAY)
-            )
+            Text.info(bukkitPlayer, "Note: Global chat is muted on Speedrun servers. You have bypass.")
         } else {
-            bukkitPlayer.sendMessage(
-                Component.text("Global chat is muted on Speedrun servers.", NamedTextColor.YELLOW)
-            )
+            Text.warning(bukkitPlayer, "Global chat is muted on Speedrun servers.")
         }
 
         ioScope.launch {

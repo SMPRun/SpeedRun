@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.2.20-RC2"
+    kotlin("jvm") version "2.3.0-Beta1"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
@@ -24,14 +24,14 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compileOnly("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     compileOnly("net.smprun:common:1.0")
     
     compileOnly("net.megavex:scoreboard-library-api:2.4.1")
     
-    compileOnly("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")
     
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     
@@ -61,14 +61,9 @@ tasks.shadowJar {
     relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
     archiveClassifier.set("all")
     
-    // Exclude dependencies provided by Common via join-classpath to prevent classloader conflicts
+    // Exclude Kotlin stdlib to avoid classloader conflicts with Common plugin
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:.*"))
-        exclude(dependency("org.jetbrains.kotlinx:.*"))
-        exclude(dependency("org.mongodb:.*"))
-        exclude(dependency("com.mongodb:.*"))
-        exclude(dependency("org.bson:.*"))
-        exclude(dependency("co.aikar:.*"))
     }
 }
 
