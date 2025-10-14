@@ -2,8 +2,10 @@ name: Speedrun
 version: '1.0'
 main: net.smprun.speedrun.Speedrun
 api-version: '1.21'
-description: A speedrun plugin
-website: https://emmerichbrowne.com
+description: SMPRun Network speedrun plugin
+website: https://smprun.net
+authors:
+  - memheap
 folia-supported: true
 
 dependencies:
