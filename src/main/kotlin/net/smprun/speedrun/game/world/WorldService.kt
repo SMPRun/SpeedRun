@@ -1,6 +1,7 @@
 package net.smprun.speedrun.game.world
 
 import net.kyori.adventure.text.Component
+import net.smprun.common.CommonServices
 import net.smprun.speedrun.Speedrun
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -31,7 +32,7 @@ class WorldService(private val plugin: Speedrun) {
             updateServerConfiguration(newSeed)
 
             // Schedule server restart
-            plugin.foliaLib.scheduler.runLater(Runnable {
+            CommonServices.foliaLib.scheduler.runLater(Runnable {
                 plugin.logger.info("Restarting server with new world seed: $newSeed")
                 plugin.logger.info("Old worlds cleaned up and new ones will be generated on startup...")
                 Bukkit.getServer().shutdown()

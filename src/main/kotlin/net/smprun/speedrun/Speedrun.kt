@@ -1,7 +1,6 @@
 package net.smprun.speedrun
 
 import co.aikar.commands.PaperCommandManager
-import com.tcoded.folialib.FoliaLib
 import net.smprun.common.CommonServices
 import net.smprun.speedrun.game.GameService
 import net.smprun.common.database.MongoService
@@ -11,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class Speedrun : JavaPlugin() {
 
-    lateinit var foliaLib: FoliaLib
     lateinit var commandManager: PaperCommandManager
     private lateinit var registrationManager: RegistrationManager
     lateinit var mongoService: MongoService
@@ -19,7 +17,6 @@ class Speedrun : JavaPlugin() {
     lateinit var scoreboardService: SpeedrunScoreboard
 
     override fun onEnable() {
-        foliaLib = FoliaLib(this)
         commandManager = PaperCommandManager(this)
         registrationManager = RegistrationManager(this, commandManager, basePackage = "net.smprun.speedrun")
         saveDefaultConfig()

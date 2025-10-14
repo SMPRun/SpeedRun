@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
+import net.smprun.common.CommonServices
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
@@ -124,7 +125,7 @@ class GameService(private val plugin: Speedrun) {
         Text.broadcast("Speedrun has been force stopped by admin! Server will reset in 10 seconds...", Colors.ERROR)
         
         // Schedule immediate world reset
-        plugin.foliaLib.scheduler.runLater(Runnable {
+        CommonServices.foliaLib.scheduler.runLater(Runnable {
             resetService.resetAllWorlds(
                 kickReason = Component.text("Speedrun force stopped by admin. Restarting with new world...")
             )
@@ -143,7 +144,7 @@ class GameService(private val plugin: Speedrun) {
         resetScheduled = true
         Text.broadcast("Server will reset in 60 seconds...", Colors.WARNING)
         
-        plugin.foliaLib.scheduler.runLater(Runnable {
+        CommonServices.foliaLib.scheduler.runLater(Runnable {
             val winnerText = winner?.name ?: "Unknown Winner"
             val timeText = " in ${TimeUtil.formatTime(gameDuration)}"
             resetService.resetAllWorlds(

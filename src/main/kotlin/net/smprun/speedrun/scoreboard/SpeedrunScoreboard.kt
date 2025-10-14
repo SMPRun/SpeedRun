@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar
+import net.smprun.common.CommonServices
 import net.smprun.common.scoreboard.ScoreboardService
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.TimeUtil
@@ -11,7 +12,7 @@ import net.smprun.speedrun.Speedrun
 import net.smprun.speedrun.player.repository.PlayerStatsRepository
 import org.bukkit.entity.Player
 
-class SpeedrunScoreboard(private val speedrunPlugin: Speedrun) : ScoreboardService(speedrunPlugin, speedrunPlugin.foliaLib) {
+class SpeedrunScoreboard(private val speedrunPlugin: Speedrun) : ScoreboardService(speedrunPlugin, CommonServices.foliaLib) {
 
     private val playerStatsRepository by lazy { PlayerStatsRepository(speedrunPlugin) }
 

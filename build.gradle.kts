@@ -35,7 +35,7 @@ dependencies {
     
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     
-    implementation("com.tcoded:FoliaLib:0.5.1")
+    compileOnly("com.tcoded:FoliaLib:0.5.1")
 }
 
 tasks {
@@ -58,10 +58,12 @@ tasks.build {
 
 tasks.shadowJar {
     mergeServiceFiles()
-    relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
     archiveClassifier.set("all")
     
-    // Exclude Kotlin stdlib to avoid classloader conflicts with Common plugin
+    // Relocate to match Common's relocation
+    relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
+    
+    // Exclude dependencies provided by Common plugin via join-classpath
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:.*"))
     }

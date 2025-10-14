@@ -1,5 +1,6 @@
 package net.smprun.speedrun.player.listener
 
+import net.smprun.common.CommonServices
 import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
@@ -24,7 +25,7 @@ class PlayerListener(private val plugin: Speedrun) : Listener {
         }
 
         // Show scoreboard after join
-        plugin.foliaLib.scheduler.runLater(Runnable {
+        CommonServices.foliaLib.scheduler.runLater(Runnable {
             if (bukkitPlayer.isOnline) {
                 scoreboard.showFor(bukkitPlayer)
             }

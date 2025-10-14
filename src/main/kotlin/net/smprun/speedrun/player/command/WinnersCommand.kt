@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.Description
 import co.aikar.commands.annotation.Subcommand
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.format.NamedTextColor
+import net.smprun.common.CommonServices
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
@@ -28,7 +29,7 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
             Text.error(sender, "Cannot view winners while a game is active!")
             return
         }
-        plugin.foliaLib.scheduler.runAsync { _ ->
+        CommonServices.foliaLib.scheduler.runAsync { _ ->
             try {
                 val winners = runBlocking { repo.listAll() }
                 if (winners.isEmpty()) {
@@ -54,7 +55,7 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
             Text.error(sender, "Cannot view best time while a game is active!")
             return
         }
-        plugin.foliaLib.scheduler.runAsync { _ ->
+        CommonServices.foliaLib.scheduler.runAsync { _ ->
             try {
                 val best = runBlocking { repo.getBestTimeWinner() }
                 if (best == null) {
