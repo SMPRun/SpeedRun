@@ -30,8 +30,12 @@ class FreezeListener(private val plugin: Speedrun) : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
-        if (!plugin.gameService.isGameActive && !player.hasPermission(bypassPermission)) {
-            Text.warning(player, "The speedrun hasn't started yet. You are frozen until it starts.")
+        if (!plugin.gameService.isGameActive) {
+            if (player.hasPermission(bypassPermission)) {
+                Text.warning(player, "The speedrun hasn't started yet. You are exempt.")
+            } else {
+                Text.warning(player, "The speedrun hasn't started yet. You are frozen until it starts.")
+            }
         }
     }
 
