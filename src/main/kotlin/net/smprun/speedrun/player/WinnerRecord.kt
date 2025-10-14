@@ -1,4 +1,4 @@
-package net.smprun.speedrun.winner
+package net.smprun.speedrun.player
 
 import java.time.Instant
 import java.util.*
@@ -9,3 +9,4 @@ data class WinnerRecord(
     val winTime: Long,
     val timestamp: Instant = Instant.now()
 )
+

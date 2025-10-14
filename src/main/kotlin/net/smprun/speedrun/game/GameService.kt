@@ -10,17 +10,18 @@ import net.smprun.speedrun.Speedrun
 import net.smprun.speedrun.events.GameEndEvent
 import net.smprun.speedrun.events.GameStartEvent
 import net.smprun.speedrun.game.world.WorldService
-import net.smprun.speedrun.player.repository.PlayerRepository
+import net.smprun.speedrun.player.repository.PlayerStatsRepository
 import net.smprun.common.utils.TimeUtil
-import net.smprun.speedrun.winner.WinnerRecord
-import net.smprun.speedrun.winner.repository.WinnerRepository
+import net.smprun.speedrun.player.WinnerRecord
+import net.smprun.speedrun.player.repository.WinnerRepository
+import net.smprun.speedrun.player.PlayerStats
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class GameService(private val plugin: Speedrun) {
     
     private val winnerRepository by lazy { WinnerRepository(plugin) }
-    private val playerRepository by lazy { PlayerRepository(plugin) }
+    private val playerStatsRepository by lazy { PlayerStatsRepository(plugin) }
     private val resetService by lazy { WorldService(plugin) }
     private val ioScope = CoroutineScope(Dispatchers.IO)
     
@@ -86,10 +87,9 @@ class GameService(private val plugin: Speedrun) {
                     winnerRepository.insert(winnerRecord)
                     
                     // Update player stats
-                    val player = playerRepository.findByUuid(winner.uniqueId)
-                    if (player != null) {
-                        playerRepository.upsert(player.addWin(gameDuration))
-                    }
+                    val stats = playerStatsRepository.findByUuid(winner.uniqueId)
+                        ?: PlayerStats(uuid = winner.uniqueId)
+                    playerStatsRepository.upsert(stats.addWin(gameDuration))
                 } catch (e: Exception) {
                     plugin.logger.severe("Failed to record winner: ${e.message}")
                 }

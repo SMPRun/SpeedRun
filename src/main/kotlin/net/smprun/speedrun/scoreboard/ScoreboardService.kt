@@ -7,7 +7,7 @@ import net.smprun.common.CommonServices
 import net.smprun.common.scoreboard.SidebarManager
 import net.smprun.common.utils.Colors
 import net.smprun.speedrun.Speedrun
-import net.smprun.speedrun.player.repository.PlayerRepository
+import net.smprun.speedrun.player.repository.PlayerStatsRepository
 import net.smprun.common.utils.TimeUtil
 import org.bukkit.entity.Player
 import java.util.UUID
@@ -15,7 +15,7 @@ import java.util.UUID
 class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
 
     private val sidebarManager = SidebarManager(plugin)
-    private val playerRepository by lazy { PlayerRepository(plugin) }
+    private val playerStatsRepository by lazy { PlayerStatsRepository(plugin) }
 
     fun start() {
         val ok = sidebarManager.start(CommonServices.scoreboardLibrary)
@@ -63,11 +63,11 @@ class ScoreboardService(private val plugin: Speedrun) : AutoCloseable {
         // Fetch player stats async
         plugin.foliaLib.scheduler.runAsync { _ ->
             try {
-                val player = runBlocking { playerRepository.findByUuid(playerId) }
+                val stats = runBlocking { playerStatsRepository.findByUuid(playerId) }
 
-                val bestTimeText = player?.bestTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
-                val recentTimeText = player?.recentTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
-                val winsText = player?.wins?.toString() ?: "N/A"
+                val bestTimeText = stats?.bestTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
+                val recentTimeText = stats?.recentTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
+                val winsText = stats?.wins?.toString() ?: "N/A"
 
                 val currentRunText = if (plugin.gameService.isGameActive) {
                     plugin.gameService.getGameDuration()?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"

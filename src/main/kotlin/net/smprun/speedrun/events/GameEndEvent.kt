@@ -1,6 +1,6 @@
 package net.smprun.speedrun.events
 
-import net.smprun.speedrun.winner.WinnerRecord
+import net.smprun.speedrun.player.WinnerRecord
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
