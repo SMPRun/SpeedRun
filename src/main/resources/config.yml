@@ -1,4 +1,0 @@
-mongodb:
-  uri: "mongodb://localhost:27017/speedrun"
-  database: "speedrun"
-

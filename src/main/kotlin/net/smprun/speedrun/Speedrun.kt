@@ -19,7 +19,6 @@ class Speedrun : JavaPlugin() {
     override fun onEnable() {
         commandManager = PaperCommandManager(this)
         registrationManager = RegistrationManager(this, commandManager, basePackage = "net.smprun.speedrun")
-        saveDefaultConfig()
 
         mongoService = CommonServices.mongo
 
