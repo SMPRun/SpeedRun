@@ -8,8 +8,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityAirChangeEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -113,6 +116,32 @@ class FreezeListener(private val plugin: Speedrun) : Listener {
     fun onBucketEmpty(event: PlayerBucketEmptyEvent) {
         if (isFrozen(event.player)) {
             event.isCancelled = true
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onDamage(event: EntityDamageEvent) {
+        val player = event.entity as? Player ?: return
+        if (isFrozen(player)) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onFoodLevelChange(event: FoodLevelChangeEvent) {
+        val player = event.entity as? Player ?: return
+        if (isFrozen(player)) {
+            event.isCancelled = true
+            event.foodLevel = player.foodLevel
+            player.saturation = player.saturation
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onAirDecrease(event: EntityAirChangeEvent) {
+        val player = event.entity as? Player ?: return
+        if (isFrozen(player)) {
+            event.amount = player.maximumAir
         }
     }
 
