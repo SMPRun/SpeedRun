@@ -14,11 +14,3 @@ dependencies:
       load: BEFORE
       required: true
       join-classpath: true
-
-permissions:
-  speedrun.freeze.bypass:
-    description: Bypass pre-game freeze and allow movement before game starts
-    default: op
-  speedrun.chat.bypass:
-    description: Bypass global chat mute enforced by the Speedrun plugin
-    default: op
