@@ -1,0 +1,5 @@
+autostart:
+  enabled: true
+  # Minimum number of online players to trigger auto-start
+  minPlayers: 10
+

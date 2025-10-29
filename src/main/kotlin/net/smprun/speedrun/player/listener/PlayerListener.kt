@@ -30,10 +30,15 @@ class PlayerListener(private val plugin: Speedrun) : Listener {
                 scoreboard.showFor(bukkitPlayer)
             }
         }, 20L)
+
+        // Check auto-start conditions after join
+        plugin.autoStartService.onPlayerJoin()
     }
 
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         scoreboard.hideFor(event.player)
+        // Check auto-start cancellation on leave
+        plugin.autoStartService.onPlayerQuit()
     }
 }

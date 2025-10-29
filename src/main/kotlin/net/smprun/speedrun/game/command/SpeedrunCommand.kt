@@ -82,4 +82,18 @@ class SpeedrunCommand(private val plugin: Speedrun) : BaseCommand() {
             kickReason = Component.text("World is being reset with a new random seed. Reconnecting...")
         )
     }
+
+    @Subcommand("reload")
+    @Description("Reload Speedrun configuration without restarting the plugin")
+    fun onReload(sender: CommandSender) {
+        try {
+            plugin.reloadConfig()
+            plugin.autoStartService.reloadConfig()
+            val enabled = plugin.config.getBoolean("autostart.enabled", true)
+            val minPlayers = plugin.config.getInt("autostart.minPlayers", 2)
+            Text.success(sender, "Config reloaded. AutoStart: ${if (enabled) "enabled" else "disabled"}, minPlayers=$minPlayers")
+        } catch (e: Exception) {
+            Text.error(sender, "Failed to reload config: ${e.message}")
+        }
+    }
 }
