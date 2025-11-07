@@ -1,29 +1,38 @@
 package net.smprun.speedrun.game
 
+import com.tcoded.folialib.FoliaLib
+import gg.scala.flavor.inject.Inject
+import gg.scala.flavor.service.Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
-import net.smprun.common.CommonServices
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.Text
-import net.smprun.speedrun.Speedrun
+import net.smprun.common.utils.TimeUtil
 import net.smprun.speedrun.events.GameEndEvent
 import net.smprun.speedrun.events.GameStartEvent
 import net.smprun.speedrun.game.world.WorldService
-import net.smprun.speedrun.player.repository.PlayerStatsRepository
-import net.smprun.common.utils.TimeUtil
-import net.smprun.speedrun.player.WinnerRecord
-import net.smprun.speedrun.player.repository.WinnerRepository
 import net.smprun.speedrun.player.PlayerStats
+import net.smprun.speedrun.player.WinnerRecord
+import net.smprun.speedrun.player.repository.PlayerStatsRepository
+import net.smprun.speedrun.player.repository.WinnerRepository
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
-class GameService(private val plugin: Speedrun) {
+@Service(name = "GameService", priority = 7)
+object GameService {
+    
+    @Inject
+    lateinit var plugin: JavaPlugin
+    
+    @Inject
+    lateinit var foliaLib: FoliaLib
     
     private val winnerRepository by lazy { WinnerRepository(plugin) }
     private val playerStatsRepository by lazy { PlayerStatsRepository(plugin) }
-    private val resetService by lazy { WorldService(plugin) }
+    private val resetService by lazy { WorldService(plugin, foliaLib) }
     private val ioScope = CoroutineScope(Dispatchers.IO)
     
     @Volatile
@@ -125,7 +134,7 @@ class GameService(private val plugin: Speedrun) {
         Text.broadcast("Speedrun has been force stopped by admin! Server will reset in 10 seconds...", Colors.ERROR)
         
         // Schedule immediate world reset
-        CommonServices.foliaLib.scheduler.runLater(Runnable {
+        foliaLib.scheduler.runLater(Runnable {
             resetService.resetAllWorlds(
                 kickReason = Component.text("Speedrun force stopped by admin. Restarting with new world...")
             )
@@ -144,7 +153,7 @@ class GameService(private val plugin: Speedrun) {
         resetScheduled = true
         Text.broadcast("Server will reset in 60 seconds...", Colors.WARNING)
         
-        CommonServices.foliaLib.scheduler.runLater(Runnable {
+        foliaLib.scheduler.runLater(Runnable {
             val winnerText = winner?.name ?: "Unknown Winner"
             val timeText = " in ${TimeUtil.formatTime(gameDuration)}"
             resetService.resetAllWorlds(

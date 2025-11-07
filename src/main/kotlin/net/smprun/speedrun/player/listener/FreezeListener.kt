@@ -1,8 +1,9 @@
 package net.smprun.speedrun.player.listener
 
+import net.smprun.common.annotations.AutoRegister
 import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
-import net.smprun.common.annotations.AutoRegister
+import net.smprun.speedrun.game.GameService
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -27,13 +28,13 @@ class FreezeListener(private val plugin: Speedrun) : Listener {
     private val bypassPermission = "speedrun.freeze.bypass"
 
     private fun isFrozen(player: Player): Boolean {
-        return !plugin.gameService.isGameActive && !player.hasPermission(bypassPermission)
+        return !GameService.isGameActive && !player.hasPermission(bypassPermission)
     }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
-        if (!plugin.gameService.isGameActive) {
+        if (!GameService.isGameActive) {
             if (player.hasPermission(bypassPermission)) {
                 Text.warning(player, "The speedrun hasn't started yet. You are exempt.")
             } else {

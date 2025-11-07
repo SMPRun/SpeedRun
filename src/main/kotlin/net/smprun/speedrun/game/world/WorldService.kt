@@ -1,14 +1,14 @@
 package net.smprun.speedrun.game.world
 
+import com.tcoded.folialib.FoliaLib
 import net.kyori.adventure.text.Component
-import net.smprun.common.CommonServices
-import net.smprun.speedrun.Speedrun
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import kotlin.random.Random
 
-class WorldService(private val plugin: Speedrun) {
+class WorldService(private val plugin: JavaPlugin, private val foliaLib: FoliaLib) {
 
     fun resetAllWorlds(kickReason: Component) {
         // Generate new random seed for the overworld
@@ -32,7 +32,7 @@ class WorldService(private val plugin: Speedrun) {
             updateServerConfiguration(newSeed)
 
             // Schedule server restart
-            CommonServices.foliaLib.scheduler.runLater(Runnable {
+            foliaLib.scheduler.runLater(Runnable {
                 plugin.logger.info("Restarting server with new world seed: $newSeed")
                 plugin.logger.info("Old worlds cleaned up and new ones will be generated on startup...")
                 Bukkit.getServer().shutdown()

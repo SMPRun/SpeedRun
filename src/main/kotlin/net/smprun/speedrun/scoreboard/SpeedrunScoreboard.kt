@@ -1,18 +1,24 @@
 package net.smprun.speedrun.scoreboard
 
+import com.tcoded.folialib.FoliaLib
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.megavex.scoreboardlibrary.api.ScoreboardLibrary
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar
-import net.smprun.common.CommonServices
 import net.smprun.common.scoreboard.ScoreboardService
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.TimeUtil
 import net.smprun.speedrun.Speedrun
+import net.smprun.speedrun.game.GameService
 import net.smprun.speedrun.player.repository.PlayerStatsRepository
 import org.bukkit.entity.Player
 
-class SpeedrunScoreboard(private val speedrunPlugin: Speedrun) : ScoreboardService(speedrunPlugin, CommonServices.foliaLib) {
+class SpeedrunScoreboard(
+    speedrunPlugin: Speedrun,
+    foliaLib: FoliaLib,
+    scoreboardLibrary: ScoreboardLibrary?
+) : ScoreboardService(speedrunPlugin, foliaLib, scoreboardLibrary) {
 
     private val playerStatsRepository by lazy { PlayerStatsRepository(speedrunPlugin) }
 
@@ -36,8 +42,8 @@ class SpeedrunScoreboard(private val speedrunPlugin: Speedrun) : ScoreboardServi
         val recentTimeText = stats?.recentTime?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
         val winsText = stats?.wins?.toString() ?: "N/A"
 
-        val currentRunText = if (speedrunPlugin.gameService.isGameActive) {
-            speedrunPlugin.gameService.getGameDuration()?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
+        val currentRunText = if (GameService.isGameActive) {
+            GameService.getGameDuration()?.let { TimeUtil.formatTimeShort(it) } ?: "N/A"
         } else {
             "N/A"
         }

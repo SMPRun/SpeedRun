@@ -1,14 +1,15 @@
 package net.smprun.speedrun.game.listener
 
-import net.smprun.speedrun.Speedrun
 import net.smprun.common.annotations.AutoRegister
+import net.smprun.speedrun.Speedrun
+import net.smprun.speedrun.events.DragonKillEvent
+import net.smprun.speedrun.game.GameService
 import org.bukkit.entity.EnderDragon
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
-import net.smprun.speedrun.events.DragonKillEvent
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -62,6 +63,6 @@ class DragonKillListener(private val plugin: Speedrun) : Listener {
     }
     
     private fun handleDragonKill(killer: Player?) {
-        plugin.gameService.endGame(killer)
+        GameService.endGame(killer)
     }
 }

@@ -1,11 +1,21 @@
 package net.smprun.speedrun.game
 
-import net.smprun.common.CommonServices
+import com.tcoded.folialib.FoliaLib
+import gg.scala.flavor.inject.Inject
+import gg.scala.flavor.service.Configure
+import gg.scala.flavor.service.Service
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.Text
-import net.smprun.speedrun.Speedrun
+import org.bukkit.plugin.java.JavaPlugin
 
-class AutoStartService(private val plugin: Speedrun, private val gameService: GameService) {
+@Service(name = "AutoStartService", priority = 6)
+object AutoStartService {
+
+    @Inject
+    lateinit var plugin: JavaPlugin
+    
+    @Inject
+    lateinit var foliaLib: FoliaLib
 
     private var countdownActive: Boolean = false
     private var secondsRemaining: Int = 0
@@ -16,10 +26,11 @@ class AutoStartService(private val plugin: Speedrun, private val gameService: Ga
     private var enabled: Boolean = true
     private var minPlayers: Int = 2
 
+    @Configure
     fun start() {
         reloadConfig()
 
-        CommonServices.foliaLib.scheduler.runTimer(Runnable {
+        foliaLib.scheduler.runTimer(Runnable {
             try {
                 tick()
             } catch (e: Exception) {
@@ -36,8 +47,8 @@ class AutoStartService(private val plugin: Speedrun, private val gameService: Ga
 
     fun onPlayerJoin() {
         if (!enabled) return
-        if (gameService.isGameActive) return
-        if (gameService.isResetScheduled) return
+        if (GameService.isGameActive) return
+        if (GameService.isResetScheduled) return
         if (countdownActive) return
 
         val online = plugin.server.onlinePlayers.size
@@ -49,7 +60,7 @@ class AutoStartService(private val plugin: Speedrun, private val gameService: Ga
     fun onPlayerQuit() {
         if (!enabled) return
         if (!countdownActive) return
-        if (gameService.isGameActive) return
+        if (GameService.isGameActive) return
 
         val onlineAfterQuit = plugin.server.onlinePlayers.size
         if (onlineAfterQuit < minPlayers && secondsRemaining > graceSeconds) {
@@ -79,7 +90,7 @@ class AutoStartService(private val plugin: Speedrun, private val gameService: Ga
             return
         }
 
-        if (gameService.isGameActive || gameService.isResetScheduled) {
+        if (GameService.isGameActive || GameService.isResetScheduled) {
             if (countdownActive) cancelCountdown()
             return
         }
@@ -104,7 +115,7 @@ class AutoStartService(private val plugin: Speedrun, private val gameService: Ga
             // Final check before starting
             if (plugin.server.onlinePlayers.size >= minPlayers) {
                 cancelCountdown()
-                gameService.startGame()
+                GameService.startGame()
             } else {
                 cancelCountdown("Not enough players. Countdown cancelled.")
             }

@@ -29,6 +29,9 @@ dependencies {
 
     compileOnly("net.smprun:common:1.0")
     
+    // Flavor DI framework (provided by Common)
+    compileOnly("gg.scala.flavor:flavor:0.2.0")
+    
     compileOnly("net.megavex:scoreboard-library-api:2.4.1")
     
     compileOnly("org.mongodb:mongodb-driver-kotlin-coroutine:5.5.1")

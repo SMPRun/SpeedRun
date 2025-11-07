@@ -6,14 +6,15 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import net.smprun.speedrun.Speedrun
+import net.smprun.common.database.MongoService
 import net.smprun.speedrun.player.PlayerStats
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.UUID
 
-class PlayerStatsRepository(private val plugin: Speedrun) {
+class PlayerStatsRepository(private val plugin: JavaPlugin) {
 
     private val collection: MongoCollection<PlayerStats> by lazy {
-        val db = plugin.mongoService.database
+        val db = MongoService.database
             ?: throw IllegalStateException("Mongo database not initialized")
         db.getCollection("player_stats", PlayerStats::class.java)
     }

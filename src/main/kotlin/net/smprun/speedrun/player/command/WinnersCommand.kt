@@ -4,14 +4,15 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Description
 import co.aikar.commands.annotation.Subcommand
+import com.tcoded.folialib.FoliaLib
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.format.NamedTextColor
-import net.smprun.common.CommonServices
+import net.smprun.common.annotations.AutoRegister
 import net.smprun.common.utils.Colors
 import net.smprun.common.utils.Text
-import net.smprun.speedrun.Speedrun
-import net.smprun.common.annotations.AutoRegister
 import net.smprun.common.utils.TimeUtil
+import net.smprun.speedrun.Speedrun
+import net.smprun.speedrun.game.GameService
 import net.smprun.speedrun.player.repository.WinnerRepository
 import org.bukkit.command.CommandSender
 
@@ -20,16 +21,16 @@ import org.bukkit.command.CommandSender
 class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
 
     private val repo by lazy { WinnerRepository(plugin) }
-    private val gameService by lazy { plugin.gameService }
+    private val foliaLib: FoliaLib by lazy { plugin.foliaLib }
 
     @Subcommand("list")
     @Description("List all winners")
     fun onList(sender: CommandSender) {
-        if (gameService.isGameActive) {
+        if (GameService.isGameActive) {
             Text.error(sender, "Cannot view winners while a game is active!")
             return
         }
-        CommonServices.foliaLib.scheduler.runAsync { _ ->
+        foliaLib.scheduler.runAsync { _ ->
             try {
                 val winners = runBlocking { repo.listAll() }
                 if (winners.isEmpty()) {
@@ -51,11 +52,11 @@ class WinnersCommand(private val plugin: Speedrun) : BaseCommand() {
     @Subcommand("best")
     @Description("Show the best time winner")
     fun onBest(sender: CommandSender) {
-        if (gameService.isGameActive) {
+        if (GameService.isGameActive) {
             Text.error(sender, "Cannot view best time while a game is active!")
             return
         }
-        CommonServices.foliaLib.scheduler.runAsync { _ ->
+        foliaLib.scheduler.runAsync { _ ->
             try {
                 val best = runBlocking { repo.getBestTimeWinner() }
                 if (best == null) {

@@ -1,9 +1,10 @@
 package net.smprun.speedrun.player.listener
 
-import net.smprun.common.CommonServices
+import com.tcoded.folialib.FoliaLib
+import net.smprun.common.annotations.AutoRegister
 import net.smprun.common.utils.Text
 import net.smprun.speedrun.Speedrun
-import net.smprun.common.annotations.AutoRegister
+import net.smprun.speedrun.game.AutoStartService
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 class PlayerListener(private val plugin: Speedrun) : Listener {
 
     private val scoreboard by lazy { plugin.scoreboardService }
+    private val foliaLib: FoliaLib by lazy { plugin.foliaLib }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -25,20 +27,20 @@ class PlayerListener(private val plugin: Speedrun) : Listener {
         }
 
         // Show scoreboard after join
-        CommonServices.foliaLib.scheduler.runLater(Runnable {
+        foliaLib.scheduler.runLater(Runnable {
             if (bukkitPlayer.isOnline) {
                 scoreboard.showFor(bukkitPlayer)
             }
         }, 20L)
 
         // Check auto-start conditions after join
-        plugin.autoStartService.onPlayerJoin()
+        AutoStartService.onPlayerJoin()
     }
 
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         scoreboard.hideFor(event.player)
         // Check auto-start cancellation on leave
-        plugin.autoStartService.onPlayerQuit()
+        AutoStartService.onPlayerQuit()
     }
 }
