@@ -27,10 +27,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // Common module (shared utilities and services)
     compileOnly("net.smprun:common:1.0")
     
-    // Flavor DI framework (provided by Common)
-    compileOnly("gg.scala.flavor:flavor:0.2.0")
+    implementation("gg.scala.flavor:flavor:0.2.1")
+    
+    implementation("org.reflections:reflections:0.10.2")
     
     compileOnly("net.megavex:scoreboard-library-api:2.4.1")
     
@@ -66,9 +68,10 @@ tasks.shadowJar {
     // Relocate to match Common's relocation
     relocate("com.tcoded.folialib", "net.smprun.libs.folialib")
     
-    // Exclude dependencies provided by Common plugin via join-classpath
+    // Exclude dependencies provided by Common plugin
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:.*"))
+        // Keep Flavor and Reflections - we bundle them separately in Speedrun
     }
 }
 

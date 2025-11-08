@@ -22,16 +22,14 @@ class Speedrun : JavaPlugin() {
     override fun onEnable() {
         saveDefaultConfig()
         
-        // Get Common plugin instance
         val common = Common.instance
         foliaLib = common.foliaLib
         
-        // Initialize Flavor DI
         val options = FlavorOptions(logger = logger)
         flavor = Flavor.create<Speedrun>(options)
         
-        // Bind dependencies
         flavor.bind<JavaPlugin>().to(this)
+        flavor.bind<Speedrun>().to(this)
         flavor.bind<FoliaLib>().to(foliaLib)
         common.scoreboardLibrary?.let {
             flavor.bind<ScoreboardLibrary>().to(it)
@@ -40,7 +38,6 @@ class Speedrun : JavaPlugin() {
         // Start Flavor (discovers and initializes all @Service objects)
         flavor.startup()
         
-        // Initialize non-Flavor services
         commandManager = PaperCommandManager(this)
         registrationManager = RegistrationManager(this, commandManager, basePackage = "net.smprun.speedrun")
         registrationManager.registerAll()
@@ -56,7 +53,6 @@ class Speedrun : JavaPlugin() {
     }
 
     override fun onDisable() {
-        // Close Flavor services
         try {
             flavor.close()
         } catch (_: Exception) {}
