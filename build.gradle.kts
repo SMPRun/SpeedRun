@@ -30,6 +30,8 @@ dependencies {
     // Common module (shared utilities and services)
     compileOnly("net.smprun:common:1.0")
     
+    compileOnly("gg.scala.aware:aware:2.1.0")
+    
     implementation("gg.scala.flavor:flavor:0.2.1")
     
     implementation("org.reflections:reflections:0.10.2")
