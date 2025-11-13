@@ -8,7 +8,6 @@ group = "net.smprun"
 version = "1.0"
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc-repo"
@@ -19,6 +18,30 @@ repositories {
     maven("https://repo.aikar.co/content/groups/aikar/") {
         name = "aikar"
     }
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/SMPRun/flavor")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+    maven {
+        name = "GitHubPackagesAware"
+        url = uri("https://maven.pkg.github.com/SMPRun/aware")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+    maven {
+        name = "GitHubPackagesCommon"
+        url = uri("https://maven.pkg.github.com/SMPRun/Common")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
@@ -27,7 +50,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // Common module (shared utilities and services)
     compileOnly("net.smprun:common:1.0")
     
     compileOnly("gg.scala.aware:aware:2.1.0")
