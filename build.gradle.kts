@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.3.0-Beta1"
+    kotlin("jvm") version "2.1.0"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
@@ -8,6 +8,7 @@ group = "net.smprun"
 version = "1.0"
 
 repositories {
+
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc-repo"
@@ -50,7 +51,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    compileOnly("net.smprun:common:1.0")
+    compileOnly("net.smprun:common:1.3")
     
     compileOnly("gg.scala.aware:aware:2.1.0")
     
